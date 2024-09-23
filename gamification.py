@@ -199,18 +199,32 @@ def perform_activity(activity, duration):
         cur_health += 2 * duration
         if (tiredness() == True) and cur_star != "textbooks": 
                 cur_hedons -= 2 * duration
-        if (tiredness() == False) and cur_star == "textbooks" and duration > 20: 
-                cur_hedons += 40 - duration
-                cur_star = None
-        if (tiredness() == False) and cur_star == "textbooks" and duration <= 20: 
+        if (tiredness() == True) and cur_star == "textbooks" and (duration <= 10): 
                 cur_hedons += duration
+                cur_star = None
+        if (tiredness() == True ) and cur_star == "textbooks" and (duration > 10):
+                cur_hedons += 20 - duration
+                cur_star = None
+        if (tiredness() == False) and cur_star != "textbooks" and duration > 20: 
+                cur_hedons += 40 - duration
+        if (tiredness() == False) and cur_star != "textbooks" and duration <= 20: 
+                cur_hedons += 2* duration
+               
+        if (tiredness() == False) and cur_star == "textbooks" and duration > 20: 
+                cur_hedons += 70 - duration
+                cur_star = None
+        if (tiredness() == False) and cur_star == "textbooks" and (duration <= 20) and (duration > 10): 
+                cur_hedons += 30 + duration
+                cur_star = None
+        if (tiredness() == False) and cur_star == "textbooks" and duration <= 10: 
+                cur_hedons += 4 * duration
                 cur_star = None
  
     if activity == "resting":
         cur_health = cur_health
         cur_hedons = cur_hedons
     
-    if activity == ("running" or "textbooks"):
+    if (activity == "running") or (activity == "textbooks"):
          placeholder = "something"
     else:
         return None
@@ -266,3 +280,7 @@ def most_fun_activity_minute():
             
 if __name__ == '__main__':
     initialize()
+    perform_activity("textbooks", 14)
+    print(most_fun_activity_minute())
+    print(get_cur_health())
+    print(get_cur_hedons())
