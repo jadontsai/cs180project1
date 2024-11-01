@@ -148,89 +148,135 @@ def detect_row(board, col, y_start, x_start, length, d_y, d_x):
         othercol = "b"
 
     if d_y == 0 and d_x == 1: #LTR
-        count = 0
-        if x_start != 0:
-            for i in range(8):
-                if board[y_start][i] == col:
-                    count += 1
-                if board[y_start][i] != col:
-                    count = 0
-                if count == length:
-                    if i == 7 or board[y_start][i+1] == othercol:
+        count = 1
+        #x start = 0
+        for i in range(8):
+            if board[y_start][i] == col:
+                if i == 0:
+                    j = 0
+                    while j != 7 and board[y_start][j+1] == col:
+                        j += 1
+                        count +=1
+                    if count == length and board[y_start][count] == " ":
                         semi_open_seq_count += 1
-                    elif board[y_start][i+1] == "" and board[y_start][i - length - 1] == "":
+                        count = 1
+                    else:
+                        count = 1
+                elif i != 7 and board[y_start][i-1] != col:
+                    k = i
+                    while k != 7 and board[y_start][k+1] == col:
+                        k += 1
+                        count += 1
+                    if count == length and board[y_start][i+count] == " ":
                         open_seq_count += 1
-        if x_start == 0:
-            for i in range(8):
-                if board[y_start][i] == col:
-                    count += 1
-                if board[y_start][i] != col:
-                    count = 0
-                if count == length:
-                    if board[y_start][i+1] == "":
+                        count = 1
+                    if count == length and board[y_start][i+count] == othercol:
                         semi_open_seq_count += 1
+                        count = 1
+        if board[y_start][7] == col:
+            l = 0
+            othercount = 1
+            while l != 0 and board[y_start][l-1] == col:
+                othercount += 1
+                l -= 1
+            if othercount == length and board[y_start][7-othercount] == " ":
+                semi_open_seq_count += 1
 
-    "====================================================================="
+    "======================================="
     if d_y == 1 and d_x == 0: #TTB
-        count = 0
-        if y_start != 0:
-            for i in range(8):
-                if board[i][x_start] == col:
-                    count += 1
-                if board[i][x_start] != col:
-                    count = 0
-                if count == length:
-                    if i == 7 or board[i+1][x_start] == othercol:
+        count = 1
+        #y start = 0
+        for i in range(8):
+            if board[i][x_start] == col:
+                if i == 0:
+                    j = 0
+                    while j != 7 and board[j+1][x_start] == col:
+                        j += 1
+                        count +=1
+                    if count == length and board[count][x_start] == " ":
                         semi_open_seq_count += 1
-                    elif board[i+1][x_start] == "" and board[i - length - 1][x_start] == "":
+                        count = 1
+                    else:
+                        count = 1
+                elif i != 7 and board[i-1][x_start] != col:
+                    k = i
+                    while k != 7 and board[k+1][x_start] == col:
+                        k += 1
+                        count += 1
+                    if count == length and board[i+count][x_start] == " ":
                         open_seq_count += 1
-        if y_start == 0:
-            for i in range(8):
-                if board[i][x_start] == col:
-                    count += 1
-                if board[i][x_start] != col:
-                    count = 0
-                if count == length:
-                    if board[i+1][x_start] == "":
+                        count = 1
+                    if count == length and board[i+count][x_start] == othercol:
                         semi_open_seq_count += 1
+                        count = 1
+        if board[7][x_start] == col:
+            l = 0
+            othercount = 1
+            while l != 0 and board[l-1][x_start] == col:
+                othercount += 1
+                l -= 1
+            if othercount == length and board[7-othercount][x_start] == " ":
+                semi_open_seq_count += 1
     "======================================================================================="
-    if d_y == 1 and d_x == 1: #ULTR
-        count = 0
-        if y_start != 0 and x_start != 0:
+    if d_y == 1 and d_x == -1: #bottom left to top right
+        count = 1
+        #y start = 8 or x start = 0
+        if x_start == y_start:
+            open_seq_count = 0
+            semi_open_seq_count = 0
+        elif x_start == 0 and y_start == 1:
+            open_seq_count = 0
+            semi_open_seq_count = 0
+        elif x_start == 7 and y_start == 8:
+                open_seq_count = 0
+                semi_open_seq_count = 0
+        elif x_start == 0:
             for i in range(8):
-                if board[y_start+i][x_start+i] == col:
-                    count += 1
-                if board[y_start+i][x_start+i] != col:
-                    count = 0
-                if count == length:
-                    if i == 7 or board[y_start+i][x_start+i] == othercol:
-                        semi_open_seq_count += 1
-                    elif board[y_start+i+1][x_start+i+1] == "" and board[y_start-1][x_start - 1] == "":
-                        open_seq_count += 1
-        if y_start == 0:
-            for i in range(8):
-                if board[y_start+i][x_start+i] == col:
-                    count += 1
-                if board[y_start+i][x_start+i] != col:
-                    count = 0
-                if count == length:
-                    if board[y_start+i+1][x_start+i+1] == "" and board[y_start-1][x_start - 1] == "":
-                        open_seq_count += 1
+                if y_start >= i and board[y_start -i][i] == col:
+                    if i == 0:
+                        j = 0
+                        while j != 7 and board[y_start-j][j] == col:
+                            j += 1
+                            count +=1
+                        if count == length and board[y_start-count][count] == " ":
+                            semi_open_seq_count += 1
+                            count = 1
+                        else:
+                            count = 1
+                    elif i != 7 and board[i-1][x_start] != col:
+                        k = 0
+                        while k != 7 and board[k+1][x_start] == col:
+                            k += 1
+                            count += 1
+                        if count == length and board[i+count][x_start] == " ":
+                            open_seq_count += 1
+                            count = 1
+                        if count == length and board[i+count][x_start] == othercol:
+                            semi_open_seq_count += 1
+                            count = 1
+            if board[7][x_start] == col:
+                l = 0
+                othercount = 1
+                while l != 0 and board[l-1][x_start] == col:
+                    othercount += 1
+                    l -= 1
+                if othercount == length and board[7-othercount][x_start] == " ":
+                    semi_open_seq_count += 1
     "====================================================================="
     if d_y == 1 and d_x == -1: #URTLL
         count = 0
-        if y_start != 0 and x_start != 0:
+        if y_start != 0 and x_start != 7:
             for i in range(8):
-                if board[y_start+i][x_start-i] == col:
+                if x_start >= i and board[y_start+i][x_start-i] == col:
                     count += 1
-                if board[y_start+i][x_start-i] != col:
+                if x_start >= i and board[y_start+i][x_start-i] != col:
                     count = 0
                 if count == length:
                     if i == 7 or board[y_start+i][x_start-i] == othercol:
                         semi_open_seq_count += 1
                     elif board[y_start+i+1][x_start-i-1] == "" and board[y_start-1][x_start + 1] == "":
                         open_seq_count += 1
-        if y_start == 0:
+        if y_start == 0 and x_start == 7:
             for i in range(8):
                 if board[y_start+i][x_start-i] == col:
                     count += 1
@@ -491,7 +537,7 @@ def easy_testset_for_main_functions():
     print(test_is_bounded())
     print(test_detect_row())
     print(test_detect_rows())
-    print(test_search_max())
+    #print(test_search_max())
 
 def some_tests():
     board = make_empty_board(8)
@@ -612,7 +658,17 @@ def some_tests():
   
             
 if __name__ == '__main__':
-    play_gomoku(8)
-    easy_testset_for_main_functions()
+   # play_gomoku(8)
+    #easy_testset_for_main_functions()
     some_tests()
+    # board= make_empty_board(8)
+    # put_seq_on_board(board, 1, 5, 1,0, 3, "w")
+    # print_board(board)
+    # print(detect_row(board, "w", 0, 5, 3, 1, 0))
+# def test_detect_row():
+#     board = make_empty_board(8)
+#     x = 5; y = 1; d_x = 0; d_y = 1; length = 3
+#     put_seq_on_board(board, y, x, d_y, d_x, length, "w")
+#     print_board(board)
+#     if detect_row(board, "w", 0,x,length,d_y,d_x) == (1,0):
     
