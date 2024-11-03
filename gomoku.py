@@ -37,7 +37,9 @@ def is_bounded(board, y_end, x_end, length, d_y, d_x):
         return "CLOSED"
     if d_y == 0 and d_x == 1: #LTR
         if x_end != 0 and x_end !=7:
-            if board[y_end][x_end - length] == " ":
+            if x_end +1 == length:
+                left_open = False
+            elif board[y_end][x_end-1-length] == " ":
                 left_open = True
             if board[y_end][x_end + 1] == " ":
                 right_open = True
@@ -47,32 +49,37 @@ def is_bounded(board, y_end, x_end, length, d_y, d_x):
                 return "OPEN"
             else:
                 return "CLOSED"
-        if x_end == 0:
-            if board[y_end][1] == " ":
-                return "SEMIOPEN"
-            else:
-                return "CLOSED"
         if x_end == 7:
             if board[y_end][x_end - length] == " ":
                 return "SEMIOPEN"
             else:
                 return "CLOSED"
-    "====================================================================="
-    if d_y == 1 and d_x == 1: #ULTLR
-        if y_end == 7 and x_end - length == 0:
+    #"====================================================================="
+    if d_y == 1 and d_x == 1: #ENDS AT BOTTOM RIGHT CORNER
+        if y_end == 7 and x_end - length +1== 0:
             return "CLOSED"
-        if x_end == 7 and y_end - length == 0:
+        if x_end == 7 and y_end - length +1== 0:
             return "CLOSED"
         if y_end == 7:
             if board[y_end - length][x_end-length] == " ":
                 return "SEMIOPEN"
             else:
                 return "CLOSED"
+        if x_end == length-1:
+            if board[y_end +1][x_end+1] == " ":
+                return "SEMIOPEN"
+            else:
+                return "CLOSED"
+        if y_end == length-1:
+            if board[y_end +1][x_end+1] == " ":
+                return "SEMIOPEN"
+            else:
+                return "CLOSED"
         if x_end == 7:
             if board[y_end - length][x_end-length] == " ":
                 return "SEMIOPEN"
             else:
-                return "CLOSED"
+                return "CLOSED"    
         if board[y_end-length][x_end - length] == " ":
                 top_left_open = True
         if board[y_end+1][x_end + 1] == " ":
@@ -83,10 +90,13 @@ def is_bounded(board, y_end, x_end, length, d_y, d_x):
             return "OPEN"
         else:
             return "CLOSED"
-    "======================================================================================="
-    if d_y == 1 and d_x == 0: #TTB
-        if y_end != 0 and y_end !=7:
-            if board[y_end-length][x_end] == " ":
+    #"======================================================================================="
+    if d_y == 1 and d_x == 0: #ENDS AT BOTTOM
+        
+        if y_end !=7:
+            if y_end +1 == length:
+                top_open = False
+            elif board[y_end-length-1][x_end] == " ":
                 top_open = True
             if board[y_end+1][x_end] == " ":
                 bottom_open = True
@@ -96,35 +106,43 @@ def is_bounded(board, y_end, x_end, length, d_y, d_x):
                 return "OPEN"
             else:
                 return "CLOSED"
-        if y_end == 0:
-            if board[1][x_end] == " ":
-                return "SEMIOPEN"
-            else:
-                return "CLOSED"
         if y_end == 7:
             if board[y_end-length][x_end] == " ":
                 return "SEMIOPEN"
             else:
                 return "CLOSED"
-    "====================================================================="
-    if d_y == 1 and d_x == -1: #URTLL
-        if y_end == 7 and x_end + length == 0:
+    #"====================================================================="
+    if d_y == 1 and d_x == -1: #ends at BOTTOM LEFT CORNER
+#             x = 7; y = 0; d_x = -1; d_y = 1; length = 7
+#     put_seq_on_board(board, y, x, d_y, d_x, length, "w")
+#    # put_seq_on_board(board, 2, 3, d_y, d_x, 1, "b")
+
+#     print_board(board)
+    
+#     y_end = 6
+#     x_end = 1
+        if x_end == 0 and y_end - length +1== 0:
             return "CLOSED"
-        if x_end == 7 and y_end + length == 0:
+        if y_end == 7 and x_end == 7:
             return "CLOSED"
+        if x_end == 0:
+            if board[y_end - length][length] == " ":
+                return "SEMIOPEN"
+            else:
+                return "CLOSED"
         if y_end == 7:
-            if board[y_end + length][x_end+length] == " ":
+            if board[y_end - length][x_end + length] == " ":
                 return "SEMIOPEN"
             else:
                 return "CLOSED"
-        if x_end == 7:
-            if board[y_end + length][x_end+length] == " ":
+        if y_end - length +1== 0:
+            if board[y_end + 1][x_end -1] == " ":
                 return "SEMIOPEN"
             else:
                 return "CLOSED"
-        if board[y_end+length][x_end + length] == " ":
-                top_right_open = True
-        if board[y_end-1][x_end - 1] == " ":
+        if board[y_end-length][x_end + length] == " ":
+            top_right_open = True
+        if board[y_end+1][x_end - 1] == " ":
             bottom_left_open = True
         if bottom_left_open != top_right_open:
             return "SEMIOPEN"
@@ -132,7 +150,6 @@ def is_bounded(board, y_end, x_end, length, d_y, d_x):
             return "OPEN"
         else:
             return "CLOSED"
-    
     
 def detect_row(board, col, y_start, x_start, length, d_y, d_x):
     open_seq_count = 0
@@ -149,51 +166,17 @@ def detect_row(board, col, y_start, x_start, length, d_y, d_x):
 
     if d_y == 0 and d_x == 1: #LTR
         count = 1
+        count2 = 0
         #x start = 0
-        for i in range(8):
-            if board[y_start][i] == col:
-                if i == 0:
-                    j = 0
-                    while j != 7 and board[y_start][j+1] == col:
-                        j += 1
-                        count +=1
-                    if count == length and board[y_start][count] == " ":
-                        semi_open_seq_count += 1
-                        count = 1
-                    else:
-                        count = 1
-                elif i != 7 and board[y_start][i-1] != col:
-                    k = i
-                    while k != 7 and board[y_start][k+1] == col:
-                        k += 1
-                        count += 1
-                    if count == length and board[y_start][i+count] == " ":
-                        open_seq_count += 1
-                        count = 1
-                    if count == length and board[y_start][i+count] == othercol:
-                        semi_open_seq_count += 1
-                        count = 1
-        if board[y_start][7] == col:
-            l = 0
-            othercount = 1
-            while l != 0 and board[y_start][l-1] == col:
-                othercount += 1
-                l -= 1
-            if othercount == length and board[y_start][7-othercount] == " ":
-                semi_open_seq_count += 1
-
-    "======================================="
-    if d_y == 1 and d_x == 0: #TTB
-        count = 1
-        #y start = 0
-        for i in range(8):
-            if board[i][x_start] == col:
+        for i in range(8): 
+            if board[i][x_start] == col: #x start should stay constant, 
+                count2 += 1
                 if i == 0:
                     j = 0
                     while j != 7 and board[j+1][x_start] == col:
                         j += 1
                         count +=1
-                    if count == length and board[count][x_start] == " ":
+                    if count == length and count != 8 and board[count][x_start] == " ":
                         semi_open_seq_count += 1
                         count = 1
                     else:
@@ -203,66 +186,95 @@ def detect_row(board, col, y_start, x_start, length, d_y, d_x):
                     while k != 7 and board[k+1][x_start] == col:
                         k += 1
                         count += 1
-                    if count == length and board[i+count][x_start] == " ":
-                        open_seq_count += 1
-                        count = 1
-                    if count == length and board[i+count][x_start] == othercol:
+                    if count == length and i+count == 8: #only way i+count == 8 if its semi open at the end of the board. can i+count ever be >8? idts but CHECKKKKKK
                         semi_open_seq_count += 1
                         count = 1
-        if board[7][x_start] == col:
-            l = 0
-            othercount = 1
-            while l != 0 and board[l-1][x_start] == col:
-                othercount += 1
-                l -= 1
-            if othercount == length and board[7-othercount][x_start] == " ":
-                semi_open_seq_count += 1
-    "======================================================================================="
-    if d_y == 1 and d_x == -1: #bottom left to top right
+                    elif count == length and board[i+count][x_start] == " " and board[i-1][x_start] == " ":
+                        open_seq_count += 1
+                        count = 1
+                    elif count == length and board[i+count][x_start] != " " and board[i-1][x_start] == " ":
+                        semi_open_seq_count += 1
+                        count = 1
+                    elif count == length and board[i+count][x_start] == " " and board[i-1][x_start] != " ":
+                        semi_open_seq_count += 1
+                        count = 1 
+
+    #"======================================================================================="
+    if d_y == 1 and d_x == -1: #STARTS AT TOP RIGHT
         count = 1
-        #y start = 8 or x start = 0
-        if x_start == y_start:
+        #x start = 7 or y start = 0
+
+        if y_start == 0 and x_start == 1:
             open_seq_count = 0
             semi_open_seq_count = 0
-        elif x_start == 0 and y_start == 1:
-            open_seq_count = 0
-            semi_open_seq_count = 0
-        elif x_start == 7 and y_start == 8:
+        elif x_start == 7 and y_start == 6:
                 open_seq_count = 0
                 semi_open_seq_count = 0
-        elif x_start == 0:
-            for i in range(8):
-                if y_start >= i and board[y_start -i][i] == col:
+        elif x_start == 7: #on RIGHTmost column
+            temp = 7-y_start+1
+            for i in range(7-y_start+1): 
+                if board[y_start+i][x_start-i] == col: #x start going up, y start is literally going up, decreasing
+                   # count += 1
                     if i == 0:
                         j = 0
-                        while j != 7 and board[y_start-j][j] == col:
+                        while j != 7 and board[j+1][j-1] == col:
                             j += 1
                             count +=1
-                        if count == length and board[y_start-count][count] == " ":
+                        if count == length and count <=temp and board[y_start +count][x_start-count] == " ":
                             semi_open_seq_count += 1
                             count = 1
                         else:
                             count = 1
-                    elif i != 7 and board[i-1][x_start] != col:
-                        k = 0
-                        while k != 7 and board[k+1][x_start] == col:
+                    elif i+y_start <7 and board[i-1][i+1] != col:
+                        k = i
+                        while k != 7 and board[k+1][k-1] == col:
                             k += 1
                             count += 1
-                        if count == length and board[i+count][x_start] == " ":
-                            open_seq_count += 1
-                            count = 1
-                        if count == length and board[i+count][x_start] == othercol:
+                        if count == length and i+count == 7-y_start: #only way i+count == 8 if its semi open at the end of the board. can i+count ever be >8? idts but CHECKKKKKK
                             semi_open_seq_count += 1
                             count = 1
-            if board[7][x_start] == col:
-                l = 0
-                othercount = 1
-                while l != 0 and board[l-1][x_start] == col:
-                    othercount += 1
-                    l -= 1
-                if othercount == length and board[7-othercount][x_start] == " ":
-                    semi_open_seq_count += 1
-    "====================================================================="
+                        elif count == length and board[i+count][i-count] == " " and board[i-1][i+1] == " ":
+                            open_seq_count += 1
+                            count = 1
+                        elif count == length and board[i+count][i-count] != " " and board[i-1][i+1] == " ":
+                            semi_open_seq_count += 1
+                            count = 1
+                        elif count == length and board[i+count][i-count] == " " and board[i-1][i+1] != " ":
+                            semi_open_seq_count += 1
+                            count = 1 
+        elif y_start == 0: #on RIGHTmost column
+            temp = 7-y_start+1
+            for i in range(7-y_start+1): 
+                if board[y_start+i][x_start-i] == col: #x start going up, y start is literally going up, decreasing
+                   # count += 1
+                    if i == 0:
+                        j = 0
+                        while j != 7 and board[j+1][j-1] == col:
+                            j += 1
+                            count +=1
+                        if count == length and count <=temp and board[y_start +count][x_start-count] == " ":
+                            semi_open_seq_count += 1
+                            count = 1
+                        else:
+                            count = 1
+                    elif i+y_start <7 and board[i-1][i+1] != col:
+                        k = i
+                        while k != 7 and board[k+1][k-1] == col:
+                            k += 1
+                            count += 1
+                        if count == length and i+count == 7-y_start: #only way i+count == 8 if its semi open at the end of the board. can i+count ever be >8? idts but CHECKKKKKK
+                            semi_open_seq_count += 1
+                            count = 1
+                        elif count == length and board[i+count][i-count] == " " and board[i-1][i+1] == " ":
+                            open_seq_count += 1
+                            count = 1
+                        elif count == length and board[i+count][i-count] != " " and board[i-1][i+1] == " ":
+                            semi_open_seq_count += 1
+                            count = 1
+                        elif count == length and board[i+count][i-count] == " " and board[i-1][i+1] != " ":
+                            semi_open_seq_count += 1
+                            count = 1 
+    #"====================================================================="
     if d_y == 1 and d_x == -1: #URTLL
         count = 0
         if y_start != 0 and x_start != 7:
@@ -289,25 +301,32 @@ def detect_row(board, col, y_start, x_start, length, d_y, d_x):
     
 def detect_rows(board, col, length):
 
-
+    #def detect_row(board, col, y_start, x_start, length, d_y, d_x)
     open_seq_count, semi_open_seq_count = 0, 0
-    search_range = 7-length
+    search_range = 9-length
+
     vert_rows = []
     hor_rows= []
     ultbr_rows = []
     urtbl_rows = []
-    for i in range(search_range):
-        for j in range(length):
+    for i in range(search_range): #say length 5, goes 0,1,2,3
+        for j in range(7): #goes 0,1,2,3,4,5,6,7
             placeholder1 = detect_row(board, col, i, j, length, 1, 0)
+            # looks for vert rows 
             vert_rows.append(placeholder1)
             placeholder2 = detect_row(board, col, j, i, length, 0, 1)
             hor_rows.append(placeholder2)
     
     for i in range(search_range):
         for j in range(search_range):
+            #say length 7, goes 0,1
             ultbr_rows.append(detect_row(board, col, i, j, length, 1, 1))
+    
+    for i in range(search_range):
+        for j in range(7,length,-1):
+            #say length 5, y needs to go 0,1,2,3, x needs to go 7,6,5,4
             urtbl_rows.append(detect_row(board, col, i, j, length, 1, -1))
-
+    #inefficient but ehhhhh
     for i in range(len(vert_rows)):
         open_seq_count += vert_rows[i][0] 
         semi_open_seq_count += vert_rows[i][1]
@@ -381,10 +400,10 @@ def is_win(board):
     if count == 0:
         return "Draw"
     placeholder = detect_rows(board, "w", 5)
-    if placeholder[0] >0 or placeholder[1]>0:
+    if placeholder[0] >0 or (placeholder[1]>0):
         return "White won"
     placeholder = detect_rows(board, "b", 5)
-    if placeholder[0] >0 or placeholder[1]>0:
+    if (placeholder[0] >0) or (placeholder[1]>0):
         return "Black won"
     else:
         return "Continue playing"
@@ -478,28 +497,199 @@ def put_seq_on_board(board, y, x, d_y, d_x, length, col):
         x += d_x
 
 
-def test_is_empty():
-    board  = make_empty_board(8)
-    if is_empty(board):
-        print("TEST CASE for is_empty PASSED")
-    else:
-        print("TEST CASE for is_empty FAILED")
+# def test_is_empty():
+#     board  = make_empty_board(8)
+#     if is_empty(board):
+#         print("TEST CASE for is_empty PASSED")
+#     else:
+#         print("TEST CASE for is_empty FAILED")
 
-def test_is_bounded():
-    board = make_empty_board(8)
-    x = 5; y = 1; d_x = 0; d_y = 1; length = 3
-    put_seq_on_board(board, y, x, d_y, d_x, length, "w")
-    print_board(board)
+# def test_is_bounded():
+#     board = make_empty_board(8)
+#     x = 6; y = 1; d_x = -1; d_y = 1; length = 5
+#     put_seq_on_board(board, y, x, d_y, d_x, length, "w")
+#    # put_seq_on_board(board, 2, 3, d_y, d_x, 1, "b")
+
+#     print_board(board)
+
+#     y_end = 5
+#     x_end = 2
+#     print(is_bounded(board, y_end, x_end, length, d_y, d_x))
+
+# def test_detect_row():
+#     board = make_empty_board(8)
+#     x = 0; y = 0; d_x = 1; d_y = 0; length = 2
+#     put_seq_on_board(board, y, x, d_y, d_x, length, "w")
+#     #put_seq_on_board(board, y, 1, d_y, d_x, 2, "w")
+
+#     put_seq_on_board(board, 0,4, d_y, d_x, 2, "w")
+#    # put_seq_on_board(board, 0,3, d_y, d_x, 1, "b")
+
+
+#     print_board(board)
+#     print(detect_row(board, "w", y, x, length, d_y, d_x))
+
+# def test_detect_rows():
+#     board = make_empty_board(8)
+#     x = 5; y = 1; d_x = 0; d_y = 1; length = 3; col = 'w'
+#     put_seq_on_board(board, y, x, d_y, d_x, length, "w")
+#     print_board(board)
+#     if detect_rows(board, col,length) == (1,0):
+#         print("TEST CASE for detect_rows PASSED")
+#     else:
+#         print("TEST CASE for detect_rows FAILED")
+
+# def test_search_max():
+#     board = make_empty_board(8)
+#     x = 5; y = 0; d_x = 0; d_y = 1; length = 4; col = 'w'
+#     put_seq_on_board(board, y, x, d_y, d_x, length, col)
+#     x = 6; y = 0; d_x = 0; d_y = 1; length = 4; col = 'b'
+#     put_seq_on_board(board, y, x, d_y, d_x, length, col)
+#     print_board(board)
+#     if search_max(board) == (4,6):
+#         print("TEST CASE for search_max PASSED")
+#     else:
+#         print("TEST CASE for search_max FAILED")
+
+# def easy_testset_for_main_functions():
+#     # print(test_is_empty())
+#     print(test_is_bounded())
+#     #print(test_detect_row())
+#    # print(test_detect_rows())
+#     #print(test_search_max())
+
+# def some_tests():
+#     board = make_empty_board(8)
+
+#     board[0][5] = "w"
+#     board[0][6] = "b"
+#     y = 5; x = 2; d_x = 0; d_y = 1; length = 3
+#     put_seq_on_board(board, y, x, d_y, d_x, length, "w")
+#     print_board(board)
+#     analysis(board)
     
-    y_end = 3
-    x_end = 5
+#     # Expected output:
+#     #       *0|1|2|3|4|5|6|7*
+#     #       0 | | | | |w|b| *
+#     #       1 | | | | | | | *
+#     #       2 | | | | | | | *
+#     #       3 | | | | | | | *
+#     #       4 | | | | | | | *
+#     #       5 | |w| | | | | *
+#     #       6 | |w| | | | | *
+#     #       7 | |w| | | | | *
+#     #       *****************
+#     #       Black stones:
+#     #       Open rows of length 2: 0
+#     #       Semi-open rows of length 2: 0
+#     #       Open rows of length 3: 0
+#     #       Semi-open rows of length 3: 0
+#     #       Open rows of length 4: 0
+#     #       Semi-open rows of length 4: 0
+#     #       Open rows of length 5: 0
+#     #       Semi-open rows of length 5: 0
+#     #       White stones:
+#     #       Open rows of length 2: 0
+#     #       Semi-open rows of length 2: 0
+#     #       Open rows of length 3: 0
+#     #       Semi-open rows of length 3: 1
+#     #       Open rows of length 4: 0
+#     #       Semi-open rows of length 4: 0
+#     #       Open rows of length 5: 0
+#     #       Semi-open rows of length 5: 0
+    
+#     y = 3; x = 5; d_x = -1; d_y = 1; length = 2
+    
+#     put_seq_on_board(board, y, x, d_y, d_x, length, "b")
+#     print_board(board)
+#     analysis(board)
+    
+#     # Expected output:
+#     #        *0|1|2|3|4|5|6|7*
+#     #        0 | | | | |w|b| *
+#     #        1 | | | | | | | *
+#     #        2 | | | | | | | *
+#     #        3 | | | | |b| | *
+#     #        4 | | | |b| | | *
+#     #        5 | |w| | | | | *
+#     #        6 | |w| | | | | *
+#     #        7 | |w| | | | | *
+#     #        *****************
+#     #
+#     #         Black stones:
+#     #         Open rows of length 2: 1
+#     #         Semi-open rows of length 2: 0
+#     #         Open rows of length 3: 0
+#     #         Semi-open rows of length 3: 0
+#     #         Open rows of length 4: 0
+#     #         Semi-open rows of length 4: 0
+#     #         Open rows of length 5: 0
+#     #         Semi-open rows of length 5: 0
+#     #         White stones:
+#     #         Open rows of length 2: 0
+#     #         Semi-open rows of length 2: 0
+#     #         Open rows of length 3: 0
+#     #         Semi-open rows of length 3: 1
+#     #         Open rows of length 4: 0
+#     #         Semi-open rows of length 4: 0
+#     #         Open rows of length 5: 0
+#     #         Semi-open rows of length 5: 0
+#     #     
+    
+#     y = 5; x = 3; d_x = -1; d_y = 1; length = 1
+#     put_seq_on_board(board, y, x, d_y, d_x, length, "b");
+#     print_board(board);
+#     analysis(board);
+    
+#     #        Expected output:
+#     #           *0|1|2|3|4|5|6|7*
+#     #           0 | | | | |w|b| *
+#     #           1 | | | | | | | *
+#     #           2 | | | | | | | *
+#     #           3 | | | | |b| | *
+#     #           4 | | | |b| | | *
+#     #           5 | |w|b| | | | *
+#     #           6 | |w| | | | | *
+#     #           7 | |w| | | | | *
+#     #           *****************
+#     #        
+#     #        
+#     #        Black stones:
+#     #        Open rows of length 2: 0
+#     #        Semi-open rows of length 2: 0
+#     #        Open rows of length 3: 0
+#     #        Semi-open rows of length 3: 1
+#     #        Open rows of length 4: 0
+#     #        Semi-open rows of length 4: 0
+#     #        Open rows of length 5: 0
+#     #        Semi-open rows of length 5: 0
+#     #        White stones:
+#     #        Open rows of length 2: 0
+#     #        Semi-open rows of length 2: 0
+#     #        Open rows of length 3: 0
+#     #        Semi-open rows of length 3: 1
+#     #        Open rows of length 4: 0
+#     #        Semi-open rows of length 4: 0
+#     #        Open rows of length 5: 0
+#     #        Semi-open rows of length 5: 0
 
-    if is_bounded(board, y_end, x_end, length, d_y, d_x) == 'OPEN':
-        print("TEST CASE for is_bounded PASSED")
-    else:
-        print("TEST CASE for is_bounded FAILED")
 
-
+  
+            
+# if __name__ == '__main__':
+#    # play_gomoku(8)
+#     easy_testset_for_main_functions()
+#     #some_tests()
+#     # board= make_empty_board(8)
+#     # put_seq_on_board(board, 1, 5, 1,0, 3, "w")
+#     # print_board(board)
+#     # print(detect_row(board, "w", 0, 5, 3, 1, 0))
+# # def test_detect_row():
+# #     board = make_empty_board(8)
+# #     x = 5; y = 1; d_x = 0; d_y = 1; length = 3
+# #     put_seq_on_board(board, y, x, d_y, d_x, length, "w")
+# #     print_board(board)
+# #     if detect_row(board, "w", 0,x,length,d_y,d_x) == (1,0):
 def test_detect_row():
     board = make_empty_board(8)
     x = 5; y = 1; d_x = 0; d_y = 1; length = 3
@@ -508,167 +698,7 @@ def test_detect_row():
     if detect_row(board, "w", 0,x,length,d_y,d_x) == (1,0):
         print("TEST CASE for detect_row PASSED")
     else:
-        print("TEST CASE for detect_row FAILED")
+        print(detect_row(board, "w", 0,x,length,d_y,d_x))
 
-def test_detect_rows():
-    board = make_empty_board(8)
-    x = 5; y = 1; d_x = 0; d_y = 1; length = 3; col = 'w'
-    put_seq_on_board(board, y, x, d_y, d_x, length, "w")
-    print_board(board)
-    if detect_rows(board, col,length) == (1,0):
-        print("TEST CASE for detect_rows PASSED")
-    else:
-        print("TEST CASE for detect_rows FAILED")
-
-def test_search_max():
-    board = make_empty_board(8)
-    x = 5; y = 0; d_x = 0; d_y = 1; length = 4; col = 'w'
-    put_seq_on_board(board, y, x, d_y, d_x, length, col)
-    x = 6; y = 0; d_x = 0; d_y = 1; length = 4; col = 'b'
-    put_seq_on_board(board, y, x, d_y, d_x, length, col)
-    print_board(board)
-    if search_max(board) == (4,6):
-        print("TEST CASE for search_max PASSED")
-    else:
-        print("TEST CASE for search_max FAILED")
-
-def easy_testset_for_main_functions():
-    print(test_is_empty())
-    print(test_is_bounded())
-    print(test_detect_row())
-    print(test_detect_rows())
-    #print(test_search_max())
-
-def some_tests():
-    board = make_empty_board(8)
-
-    board[0][5] = "w"
-    board[0][6] = "b"
-    y = 5; x = 2; d_x = 0; d_y = 1; length = 3
-    put_seq_on_board(board, y, x, d_y, d_x, length, "w")
-    print_board(board)
-    analysis(board)
-    
-    # Expected output:
-    #       *0|1|2|3|4|5|6|7*
-    #       0 | | | | |w|b| *
-    #       1 | | | | | | | *
-    #       2 | | | | | | | *
-    #       3 | | | | | | | *
-    #       4 | | | | | | | *
-    #       5 | |w| | | | | *
-    #       6 | |w| | | | | *
-    #       7 | |w| | | | | *
-    #       *****************
-    #       Black stones:
-    #       Open rows of length 2: 0
-    #       Semi-open rows of length 2: 0
-    #       Open rows of length 3: 0
-    #       Semi-open rows of length 3: 0
-    #       Open rows of length 4: 0
-    #       Semi-open rows of length 4: 0
-    #       Open rows of length 5: 0
-    #       Semi-open rows of length 5: 0
-    #       White stones:
-    #       Open rows of length 2: 0
-    #       Semi-open rows of length 2: 0
-    #       Open rows of length 3: 0
-    #       Semi-open rows of length 3: 1
-    #       Open rows of length 4: 0
-    #       Semi-open rows of length 4: 0
-    #       Open rows of length 5: 0
-    #       Semi-open rows of length 5: 0
-    
-    y = 3; x = 5; d_x = -1; d_y = 1; length = 2
-    
-    put_seq_on_board(board, y, x, d_y, d_x, length, "b")
-    print_board(board)
-    analysis(board)
-    
-    # Expected output:
-    #        *0|1|2|3|4|5|6|7*
-    #        0 | | | | |w|b| *
-    #        1 | | | | | | | *
-    #        2 | | | | | | | *
-    #        3 | | | | |b| | *
-    #        4 | | | |b| | | *
-    #        5 | |w| | | | | *
-    #        6 | |w| | | | | *
-    #        7 | |w| | | | | *
-    #        *****************
-    #
-    #         Black stones:
-    #         Open rows of length 2: 1
-    #         Semi-open rows of length 2: 0
-    #         Open rows of length 3: 0
-    #         Semi-open rows of length 3: 0
-    #         Open rows of length 4: 0
-    #         Semi-open rows of length 4: 0
-    #         Open rows of length 5: 0
-    #         Semi-open rows of length 5: 0
-    #         White stones:
-    #         Open rows of length 2: 0
-    #         Semi-open rows of length 2: 0
-    #         Open rows of length 3: 0
-    #         Semi-open rows of length 3: 1
-    #         Open rows of length 4: 0
-    #         Semi-open rows of length 4: 0
-    #         Open rows of length 5: 0
-    #         Semi-open rows of length 5: 0
-    #     
-    
-    y = 5; x = 3; d_x = -1; d_y = 1; length = 1
-    put_seq_on_board(board, y, x, d_y, d_x, length, "b");
-    print_board(board);
-    analysis(board);
-    
-    #        Expected output:
-    #           *0|1|2|3|4|5|6|7*
-    #           0 | | | | |w|b| *
-    #           1 | | | | | | | *
-    #           2 | | | | | | | *
-    #           3 | | | | |b| | *
-    #           4 | | | |b| | | *
-    #           5 | |w|b| | | | *
-    #           6 | |w| | | | | *
-    #           7 | |w| | | | | *
-    #           *****************
-    #        
-    #        
-    #        Black stones:
-    #        Open rows of length 2: 0
-    #        Semi-open rows of length 2: 0
-    #        Open rows of length 3: 0
-    #        Semi-open rows of length 3: 1
-    #        Open rows of length 4: 0
-    #        Semi-open rows of length 4: 0
-    #        Open rows of length 5: 0
-    #        Semi-open rows of length 5: 0
-    #        White stones:
-    #        Open rows of length 2: 0
-    #        Semi-open rows of length 2: 0
-    #        Open rows of length 3: 0
-    #        Semi-open rows of length 3: 1
-    #        Open rows of length 4: 0
-    #        Semi-open rows of length 4: 0
-    #        Open rows of length 5: 0
-    #        Semi-open rows of length 5: 0
-
-
-  
-            
-if __name__ == '__main__':
-   # play_gomoku(8)
-    #easy_testset_for_main_functions()
-    some_tests()
-    # board= make_empty_board(8)
-    # put_seq_on_board(board, 1, 5, 1,0, 3, "w")
-    # print_board(board)
-    # print(detect_row(board, "w", 0, 5, 3, 1, 0))
-# def test_detect_row():
-#     board = make_empty_board(8)
-#     x = 5; y = 1; d_x = 0; d_y = 1; length = 3
-#     put_seq_on_board(board, y, x, d_y, d_x, length, "w")
-#     print_board(board)
-#     if detect_row(board, "w", 0,x,length,d_y,d_x) == (1,0):
+test_detect_row()
     
